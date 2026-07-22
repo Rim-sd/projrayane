@@ -1,0 +1,44 @@
+﻿@model appTest.Models.Medicament
+
+<div class="text-center">
+    <h3 class="display-4">Modification du medicament</h3>
+</div>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <h3>Modifier </h3>
+    <label class="mt-4"> Code:</label>
+    <input class="form-control" type="text" asp-for="Code" />
+    <br />
+    <label class="mt-4"> Nom: </label>
+    <input class="form-control" type="text" asp-for="Nom" />
+    <br />
+
+    <div class="form-group">
+        <label asp-for="Categorie">Catégorie</label>
+        <select asp-for="CategorieId" asp-items="ViewBag.CategorieId" class="form-control">
+            <option value="">-- Sélectionner une catégorie --</option>
+        </select>
+    </div>
+    <br />
+    <label class="mt-4">Prix: </label>
+    <input class="form-control" type="number" asp-for="Prix" />
+    <br />
+    <label class="mt-4">Quantite: </label>
+    <input class="form-control" type="number" asp-for="Quantite" />
+    <br />
+    <label class="mt-4">Date d'expiration: </label>
+    <input class="form-control" type="date" asp-for="DateExpiration" />
+    <br />
+
+    <div class="form-group">
+        <label asp-for="Fournisseurs">Fournisseur</label>
+        <select asp-for="FournisseurId" asp-items="ViewBag.FournisseurId" class="form-control">
+            <option value="">-- Sélectionner un fournisseur --</option>
+        </select>
+    </div>
+    <br />
+    <br />
+    <button type="submit">enregistrer</button>
+    <button type="reset">supprimer</button>
+    <a asp-action="Index">Annuler</a>
+</form>

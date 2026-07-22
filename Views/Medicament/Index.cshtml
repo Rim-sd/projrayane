@@ -1,0 +1,73 @@
+﻿@model IEnumerable<appTest.Models.Medicament>
+
+    <h3>Liste des médicaments</h3>
+    <div class="ajouter">
+    <p>
+        <a asp-controller="Medicament" asp-action="Create" class="btn btn-primary">+ Ajouter un médicament</a>
+    </p>
+</div>
+<form method="get" asp-action="Index">
+    <div>
+        <select class="form-select" name="CategorieId" asp-items="ViewBag.Categories">
+            <option value="">Toutes les catégories</option>
+        </select>
+    </div>
+    <div>
+        <select class="form-select" name="FournisseurId" asp-items="ViewBag.Fournisseurs">
+            <option value="">Tous les fournisseurs</option>
+        </select>
+    </div>
+    <div>
+        <input type="search"
+               name="search"
+               value="@Context.Request.Query["search"]"
+               class="form-control"
+               placeholder="Rechercher par nom ou code..." />
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Réinitialiser</a>
+    </div>
+</form>
+<div class="text-center">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Nom</th>
+                <th>Categorie</th>
+                <th>Prix</th>
+                <th>Quantité</th>
+                <th>Date d'expiration</th>
+                <th>Fournisseur</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Medicament in Model)
+            {
+                <tr>
+                    <td>@Medicament.Code</td>
+                    <td>@Medicament.Nom</td>
+                    <td>@Medicament.Categorie?.Nom</td>
+                    <td>@Medicament.Prix</td>
+                    <td>@Medicament.Quantite</td>
+                    <td>@Medicament.DateExpiration.ToString("dd/MM/yyyy")</td>
+                    <td>@Medicament.Fournisseurs?.Nom</td>
+                    <td>
+                        <a class="btn btn-secondary ms-2"
+                           asp-controller="Medicament"
+                           asp-action="Edit"
+                           asp-route-Id="@Medicament.Id">
+                            Edit
+                        </a>
+                        <a class="btn btn-primary" asp-controller="Medicament" asp-action="Delete" asp-route-id="@Medicament.Id"
+                           onclick="return confirm('Voulez-vous supprimer ce produit ?');">
+                            Delete
+                        </a>
+                    </td>
+               </tr>
+            }
+        </tbody>
+    </table>
+</div>

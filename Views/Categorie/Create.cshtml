@@ -1,0 +1,17 @@
+﻿@model appTest.Models.Categorie
+
+<div class="text-center">
+    <h3 class="display-4">Création de categorie</h3>
+</div>
+
+<form asp-action="Create" method="post">
+   
+    <label class="mt-4"> Nom de la categorie:</label>
+    <input class="form-control" type="text" asp-for="Nom" />
+    <br />
+    <button type="submit">enregistrer</button>
+    <button type="reset">supprimer</button>
+    <a asp-action="Index">Annuler</a>
+</form>
+
+  

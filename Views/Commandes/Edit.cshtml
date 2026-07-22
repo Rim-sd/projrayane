@@ -1,0 +1,44 @@
+@model appTest.Models.Commande
+
+@{
+    ViewData["Title"] = "Modifier la commande";
+}
+
+<h3 class="mb-3">Modifier la commande</h3>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="CodeCommande" class="form-label">Code commande</label>
+        <input asp-for="CodeCommande" class="form-control" />
+        <span asp-validation-for="CodeCommande" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MedicamentId" class="form-label">Médicament</label>
+        <select asp-for="MedicamentId" asp-items="ViewBag.MedicamentId" class="form-select">
+            <option value="">-- Choisir un médicament --</option>
+        </select>
+        <span asp-validation-for="MedicamentId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Quantite" class="form-label">Quantité</label>
+        <input asp-for="Quantite" class="form-control" type="number" min="1" />
+        <span asp-validation-for="Quantite" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DateCommande" class="form-label">Date commande</label>
+        <input asp-for="DateCommande" class="form-control" type="date" />
+        <span asp-validation-for="DateCommande" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

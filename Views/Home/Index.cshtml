@@ -1,0 +1,258 @@
+﻿@model appTest.Models.DashboardViewModel
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Dashboard";
+    var years = Model.YearlyStock.Select(item => item.Year).ToList();
+    var entrees = Model.YearlyStock.Select(item => item.Entree).ToList();
+    var sorties = Model.YearlyStock.Select(item => item.Sortie).ToList();
+}
+
+<div class="dashboard-page">
+    <div class="dashboard-header">
+        <div>
+            <h1 class="mb-2">Dashboard de stock</h1>
+            <p class="text-muted mb-0">
+                Vue globale des médicaments, mouvements de stock, catégories, fournisseurs et expirations.
+            </p>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6 col-xl-3">
+            <div class="dashboard-card">
+                <span class="dashboard-label">Total médicaments</span>
+                <h2>@Model.TotalMedicaments</h2>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="dashboard-card success">
+                <span class="dashboard-label">Stock entrée</span>
+                <h2>@Model.TotalStockEntree</h2>
+                <p class="mb-0">@Model.StockEntreePercentage.ToString("0.##")%</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="dashboard-card danger">
+                <span class="dashboard-label">Stock sortie</span>
+                <h2>@Model.TotalStockSortie</h2>
+                <p class="mb-0">@Model.StockSortiePercentage.ToString("0.##")%</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="dashboard-card warning">
+                <span class="dashboard-label">Valeur de stock</span>
+                <h2>@Model.TotalStockValue.ToString("0.00")</h2>
+                <p class="mb-0">Prix x Quantité</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+            <div class="dashboard-panel h-100">
+                <div class="panel-header">
+                    <h3>Entrées et sorties par année</h3>
+                </div>
+                @if (Model.YearlyStock.Any())
+                {
+                    <canvas id="stockChart" height="120"></canvas>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">Aucun mouvement de stock disponible pour afficher le graphe.</p>
+                }
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="dashboard-panel h-100">
+                <div class="panel-header">
+                    <h3>Top 5 fournisseurs</h3>
+                </div>
+                @if (Model.TopFournisseurs.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Fournisseur</th>
+                                    <th>Médicaments</th>
+                                    <th>Qté</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var fournisseur in Model.TopFournisseurs)
+                                {
+                                    <tr>
+                                        <td>@fournisseur.Nom</td>
+                                        <td>@fournisseur.MedicamentCount</td>
+                                        <td>@fournisseur.TotalQuantity</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">Aucun fournisseur trouvé.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+            <div class="dashboard-panel h-100">
+                <div class="panel-header">
+                    <h3>Médicaments par catégorie</h3>
+                </div>
+                @if (Model.MedicamentsByCategory.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Catégorie</th>
+                                    <th>Nombre</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.MedicamentsByCategory)
+                                {
+                                    <tr>
+                                        <td>@item.CategoryName</td>
+                                        <td>@item.Value</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">Aucune catégorie disponible.</p>
+                }
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="dashboard-panel h-100">
+                <div class="panel-header">
+                    <h3>Stock par catégorie</h3>
+                </div>
+                @if (Model.StockByCategory.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Catégorie</th>
+                                    <th>Quantité</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.StockByCategory)
+                                {
+                                    <tr>
+                                        <td>@item.CategoryName</td>
+                                        <td>@item.Value</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">Aucun stock par catégorie disponible.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-panel">
+        <div class="panel-header">
+            <h3>@Model.CurrentMonthTitle</h3>
+        </div>
+        @if (Model.ExpiringMedicaments.Any())
+        {
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Nom</th>
+                            <th>Catégorie</th>
+                            <th>Quantité</th>
+                            <th>Date expiration</th>
+                            <th>Jours restants</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var medicament in Model.ExpiringMedicaments)
+                        {
+                            <tr>
+                                <td>@medicament.Code</td>
+                                <td>@medicament.Nom</td>
+                                <td>@medicament.Categorie</td>
+                                <td>@medicament.Quantite</td>
+                                <td>@medicament.DateExpiration.ToString("dd/MM/yyyy")</td>
+                                <td class="@(medicament.RemainingDays <= 7 ? "text-danger fw-bold" : "text-warning fw-semibold")">
+                                    @medicament.RemainingDays
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted mb-0">Aucun médicament n’expire pendant ce mois.</p>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @if (Model.YearlyStock.Any())
+    {
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const chartLabels = @Html.Raw(JsonSerializer.Serialize(years));
+            const chartEntrees = @Html.Raw(JsonSerializer.Serialize(entrees));
+            const chartSorties = @Html.Raw(JsonSerializer.Serialize(sorties));
+
+            new Chart(document.getElementById('stockChart'), {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [
+                        {
+                            label: 'Entrée',
+                            data: chartEntrees,
+                            backgroundColor: 'rgba(25, 135, 84, 0.7)',
+                            borderColor: 'rgba(25, 135, 84, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Sortie',
+                            data: chartSorties,
+                            backgroundColor: 'rgba(220, 53, 69, 0.7)',
+                            borderColor: 'rgba(220, 53, 69, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    }
+}

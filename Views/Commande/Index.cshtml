@@ -1,0 +1,59 @@
+@model IEnumerable<appTest.Models.Commande>
+
+@{
+    ViewData["Title"] = "Mes commandes";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Mes commandes</h3>
+    <a asp-action="Create" class="btn btn-primary">+ Nouvelle commande</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Code commande</th>
+                <th>Médicament</th>
+                <th>Quantité</th>
+                <th>Date commande</th>
+                <th>Statut</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var commande in Model)
+            {
+                <tr>
+                    <td>@commande.CodeCommande</td>
+                    <td>@commande.Medicament?.Nom</td>
+                    <td>@commande.Quantite</td>
+                    <td>@commande.DateCommande.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        @if (string.IsNullOrEmpty(commande.Statut))
+                        {
+                            <span class="text-muted">—</span>
+                        }
+                        else if (commande.Statut == "accepte")
+                        {
+                            <span class="badge bg-success">Accepté</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">En attente</span>
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-secondary btn-sm"
+                           asp-action="Edit"
+                           asp-route-id="@commande.Id">Edit</a>
+                        <a class="btn btn-primary btn-sm"
+                           asp-action="Delete"
+                           asp-route-id="@commande.Id"
+                           onclick="return confirm('Voulez-vous supprimer cette commande ?');">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

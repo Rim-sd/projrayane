@@ -1,0 +1,64 @@
+@model IEnumerable<appTest.Models.Medicament>
+
+@{
+    ViewData["Title"] = "Liste des médicaments";
+    Layout = "_LayoutUser";
+}
+
+<h3>Liste des médicaments</h3>
+
+<form method="get" asp-action="Liste" class="mb-4">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+            <select class="form-select" name="CategorieId" asp-items="ViewBag.Categories">
+                <option value="">Toutes les catégories</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" name="FournisseurId" asp-items="ViewBag.Fournisseurs">
+                <option value="">Tous les fournisseurs</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="search"
+                   name="search"
+                   value="@Context.Request.Query["search"]"
+                   class="form-control"
+                   placeholder="Rechercher par nom ou code..." />
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+            <a asp-action="Liste" class="btn btn-secondary ms-2">Réinitialiser</a>
+        </div>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Nom</th>
+                <th>Catégorie</th>
+                <th>Prix</th>
+                <th>Quantité</th>
+                <th>Date d'expiration</th>
+                <th>Fournisseur</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var medicament in Model)
+            {
+                <tr>
+                    <td>@medicament.Code</td>
+                    <td>@medicament.Nom</td>
+                    <td>@medicament.Categorie?.Nom</td>
+                    <td>@medicament.Prix.ToString("N2") €</td>
+                    <td>@medicament.Quantite</td>
+                    <td>@medicament.DateExpiration.ToString("dd/MM/yyyy")</td>
+                    <td>@medicament.Fournisseurs?.Nom</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

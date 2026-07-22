@@ -1,0 +1,59 @@
+@model IEnumerable<appTest.Models.Commande>
+
+@{
+    ViewData["Title"] = "Commandes utilisateurs";
+}
+
+<h3 class="mb-3">Commandes déclarées par les utilisateurs</h3>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Code commande</th>
+                <th>Médicament</th>
+                <th>Quantité</th>
+                <th>Date commande</th>
+                <th>Statut</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var commande in Model)
+            {
+                <tr>
+                    <td>@commande.CodeCommande</td>
+                    <td>@commande.Medicament?.Nom</td>
+                    <td>@commande.Quantite</td>
+                    <td>@commande.DateCommande.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        @if (string.IsNullOrEmpty(commande.Statut))
+                        {
+                            <span class="text-muted">Non traité</span>
+                        }
+                        else if (commande.Statut == "accepte")
+                        {
+                            <span class="badge bg-success">Accepté</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark">En attente</span>
+                        }
+                    </td>
+                    <td>
+                        <form asp-action="Accepter" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@commande.Id" />
+                            <button type="submit" class="btn btn-success btn-sm">Acceptée</button>
+                        </form>
+                        <form asp-action="EnAttente" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@commande.Id" />
+                            <button type="submit" class="btn btn-warning btn-sm">En attente</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

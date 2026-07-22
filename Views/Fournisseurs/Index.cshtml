@@ -1,0 +1,46 @@
+﻿@model IEnumerable<appTest.Models.Fournisseurs>
+<div class="text-center">
+    <h3>Liste des fournisseurs</h3>
+
+    <p>
+        <a asp-controller="Fournisseurs"
+           asp-action="Create" class="btn btn-primary">+ Ajouter un fournisseur</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Fournisseurs in Model)
+            {
+                <tr>
+                    <td>@Fournisseurs.Id</td>
+                    <td>@Fournisseurs.Nom</td>
+
+                    <!--chouf routage--->
+                    <td>
+                        <a class="btn-secondary"
+                           asp-controller="Fournisseurs"
+                           asp-action="Edit"
+                           asp-route-Id="@Fournisseurs.Id">
+                            Edit
+                        </a>
+                        <a class="btn btn-primary" asp-controller="Fournisseurs" asp-action="Delete" asp-route-id="@Fournisseurs.Id"
+                           onclick="return confirm('Voulez-vous supprimer ce produit ?');">
+                            Delete
+                        </a>
+
+          
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+

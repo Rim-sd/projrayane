@@ -1,0 +1,43 @@
+﻿@model IEnumerable<appTest.Models.Categorie>
+<div class="text-center">
+    <h3>Liste des categorie</h3>
+   
+    <p><a asp-controller="Categorie"
+           asp-action="Create" class="btn btn-primary">+ Ajouter une categorie</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Categorie in Model)
+            {
+                <tr>
+                    <td>@Categorie.Id</td>
+                    <td >@Categorie.Nom</td>
+                    
+                    <!--chouf routage--->
+                    <td>
+                        <a class="btn-secondary"
+                           asp-controller="Categorie"
+                           asp-action="Edit"
+                           asp-route-Id="@Categorie.Id">
+                            Edit
+                        </a>
+                        <a class="btn btn-primary" asp-controller="Categorie" asp-action="Delete" asp-route-id="@Categorie.Id"
+                           onclick="return confirm('Voulez-vous supprimer ce produit ?');">
+                            Delete
+                        </a>
+
+          
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

@@ -1,0 +1,17 @@
+﻿@model appTest.Models.Categorie
+
+<div class="text-center">
+    <h3 class="display-4">modification de Categorie</h3>
+</div>
+
+<form asp-action="Edit" method="post">
+    <h3>Modifier </h3>
+   
+    <label class="mt-4"> Nom:</label>
+    <input class="form-control" type="text" asp-for="Nom" />
+    <br />
+    <br />
+    <button type="submit">enregistrer</button>
+    <button type="reset">supprimer</button>
+    <a asp-action="Index">Annuler</a>
+</form>

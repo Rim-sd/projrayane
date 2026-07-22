@@ -1,0 +1,61 @@
+@{
+    ViewData["Title"] = "Commandes";
+}
+
+<div class="dashboard-page">
+    <div class="dashboard-header mb-4">
+        <h1 class="mb-2">Mes commandes</h1>
+        <p class="text-muted mb-0">Consultez et suivez vos commandes de médicaments.</p>
+    </div>
+    <p>
+        <a asp-controller="Commandes" asp-action="Create" class="btn btn-primary">+ Commander </a>
+    </p>
+</div>
+<div class="text-center">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Medicament </th>
+
+                    <th>Quantité</th>
+                    <th>Date commande</th>
+                    <th>Date d'expiration</th>
+
+                    <th>Statut commande</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var Commandes in Model)
+                {
+                    <tr>
+
+                        <td>@Commandes.CodeCmd</td>
+                        <td>@Commandes.Medicament?.Nom</td>
+                        <td>@Commandes.Quantite</td>
+                        <td>@Commandes.DateCommande.ToString("dd/MM/yyyy")</td>
+                        <td>@Commandes.Statut</td>
+                        <!--chouf routage--->
+                        <td>
+                            <a class="btn btn-secondary ms-2"
+                               asp-controller="Medicament"
+                               asp-action="Edit"
+                               asp-route-Id="@Commandes.Id">
+                                Edit
+                            </a>
+                            <a class="btn btn-primary" asp-controller="Medicament" asp-action="Delete" asp-route-id="@Commandes.Id"
+                               onclick="return confirm('Voulez-vous supprimer ce produit ?');">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+   
+    <div class="dashboard-panel">
+        <p class="text-muted mb-0">Aucune commande pour le moment. Cette section sera complétée prochainement.</p>
+    </div>
+</div>
